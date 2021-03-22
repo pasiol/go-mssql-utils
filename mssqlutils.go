@@ -86,7 +86,7 @@ func TransformString(length int, s string) string {
 		transformed = strings.ReplaceAll(s, "'", "''")
 	}
 	if len(transformed) > length {
-		return transformed[:length]
+		return "'" + transformed[:length] + "'"
 	}
-	return transformed
+	return "'" + transformed + "'"
 }
