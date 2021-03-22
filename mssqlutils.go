@@ -78,6 +78,9 @@ func SQLMidnight24To00(s string) (string, error) {
 }
 
 func TransformString(length int, s string) string {
+	if s == "''" {
+		return "NULL"
+	}
 	tranformed := s
 	if strings.Contains(s, "'") {
 		tranformed = strings.ReplaceAll(s, "'", "''")
