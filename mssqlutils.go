@@ -42,7 +42,7 @@ func ConnectOrFail() error {
 	return nil
 }
 
-func sqlMidnight24To00(s string) (string, error) {
+func SQLMidnight24To00(s string) (string, error) {
 	sqlTimePattern, err := regexp.Compile(`2\d{3}-\d{1,2}-\d{1,2} [\d]{1,2}:\d{1,2}:\d{1,2}.\d{1,3}`)
 	if err == nil {
 		match := sqlTimePattern.Find([]byte(s))
