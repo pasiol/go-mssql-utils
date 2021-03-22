@@ -76,3 +76,14 @@ func SQLMidnight24To00(s string) (string, error) {
 	}
 	return s, err
 }
+
+func TransformString(length int, s string) string {
+	tranformed := s
+	if strings.Contains(s, "'") {
+		tranformed = strings.ReplaceAll(s, "'", "''")
+	}
+	if len(tranformed) > length {
+		return tranformed[:length]
+	}
+	return tranformed
+}
