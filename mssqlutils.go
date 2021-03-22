@@ -78,7 +78,7 @@ func SQLMidnight24To00(s string) (string, error) {
 }
 
 func TransformString(length int, s string) string {
-	if s == "''" {
+	if s == "" {
 		return "NULL"
 	}
 	tranformed := s
