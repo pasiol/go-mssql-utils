@@ -17,7 +17,7 @@ func ConnectOrDie(server string, port string, user string, password string, data
 
 	portNumber, err := strconv.Atoi(port)
 	if err != nil || portNumber < 1024 {
-		log.Fatalf("Failed creating SQL connection pool, illegal port: %s", port)
+		log.Fatalf("malformed por number")
 	}
 
 	var db *sql.DB
@@ -25,21 +25,37 @@ func ConnectOrDie(server string, port string, user string, password string, data
 
 	db, err = sql.Open("sqlserver", connString)
 	if err != nil {
-		log.Fatalf("Failed creating SQL connection pool: %s", err)
+		log.Fatalf("failed creating SQL connection pool: %s", err)
 	}
 	ctx := context.Background()
 	err = db.PingContext(ctx)
 	if err != nil {
-		log.Fatalf("Connection ping failed: %s", err)
+		log.Fatalf("connection ping failed: %s", err)
 	}
-
-	log.Printf("SQL connection pool created succesfully, encrypt: %v.", encrypt)
 	return db
 }
 
 // ConnectOrFail func
-func ConnectOrFail() error {
-	return nil
+func ConnectOrFail(server string, port string, user string, password string, database string, encrypt bool, trust bool) (*sql.DB, error) {
+
+	portNumber, err := strconv.Atoi(port)
+	if err != nil || portNumber < 1024 {
+		return nil, errors.New("malformed por number")
+	}
+
+	var db *sql.DB
+	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s;encrypt=%s;TrustServerCertificate=%s", server, user, password, portNumber, database, strconv.FormatBool(encrypt), strconv.FormatBool(trust))
+
+	db, err = sql.Open("sqlserver", connString)
+	if err != nil {
+		return nil, err
+	}
+	ctx := context.Background()
+	err = db.PingContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
 }
 
 func SQLMidnight24To00(s string) (string, error) {
@@ -66,13 +82,13 @@ func SQLMidnight24To00(s string) (string, error) {
 							nextDateSplitted := strings.Split(nextDate.String(), " ")
 							return nextDateSplitted[0] + " 00:" + minutes + ":" + seconds, nil
 						}
-						return s, errors.New("sql midnight cannot parse date")
+						return s, errors.New("cannot parse date")
 					}
 					return s, nil
 				}
 			}
 		}
-		return s, errors.New("sql midnight illegal value for sql time")
+		return s, errors.New("malformed value for sql time")
 	}
 	return s, err
 }
